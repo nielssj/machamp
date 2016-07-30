@@ -1,7 +1,7 @@
 {
   "name": "machamp",
   "version": "0.0.1",
-  "description": "SSH Client wrapper with GUI, focused on tunneling",
+  "description": "Efficient and user-friendly SSH forwarding GUI",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
