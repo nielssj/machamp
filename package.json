@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/nielssj/machamp/issues"
   },
-  "homepage": "https://github.com/nielssj/machamp#readme"
+  "homepage": "https://github.com/nielssj/machamp#readme",
+  "dependencies": {
+    "ssh2": "^0.5.0"
+  }
 }
