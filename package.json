@@ -1,0 +1,28 @@
+{
+  "name": "machamp",
+  "version": "0.0.1",
+  "description": "SSH Client wrapper with GUI, focused on tunneling",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nielssj/machamp.git"
+  },
+  "keywords": [
+    "ssh",
+    "client",
+    "gui",
+    "tunnel",
+    "tunneling",
+    "forward",
+    "forwading"
+  ],
+  "author": "Niels Soeholm (github.com/nielssj)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nielssj/machamp/issues"
+  },
+  "homepage": "https://github.com/nielssj/machamp#readme"
+}
