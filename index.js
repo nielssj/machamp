@@ -10,40 +10,25 @@ config = {
     username: 'root',
     agent: '/run/user/1000/keyring/ssh'
   },
-  tunnels: [
-    {
-      name: 'rethinkdb',
-      srcHost: '127.0.0.1',
-      srcPort: 9090,
-      dstHost: '127.0.0.1',
-      dstPort: 9090
-    }
-  ]
+  tunnels: []
 };
 
-function bindssh(tunnelConfig, netConnection) {
-  var ssh = new SSHClient();
+function makeTunnel(tunnelConfig, netConnection) {
+  ssh.forwardOut(
+    tunnelConfig.srcHost,
+    tunnelConfig.srcPort,
+    tunnelConfig.dstHost,
+    tunnelConfig.dstPort, function(err, sshStream) {
+      if (err) {
+        netConnection.emit('error', err);
+        return;
+      }
 
-  ssh.on('ready', function() {
-    console.log('ssh:ready');
-    netConnection.emit('ssh', ssh, netConnection);
-    ssh.forwardOut(
-      tunnelConfig.srcHost,
-      tunnelConfig.srcPort,
-      tunnelConfig.dstHost,
-      tunnelConfig.dstPort, function(err, sshStream) {
-        if (err) {
-          // Bubble up the error => netConnection => server
-          netConnection.emit('error', err);
-          console.log('Destination port:', err);
-          return;
-        }
-
-        console.log('sshStream:create');
-        netConnection.emit('sshStream', sshStream);
-        netConnection.pipe(sshStream).pipe(netConnection);
-      });
-  });
+      console.log('Tunnel created');
+      netConnection.emit('sshStream', sshStream);
+      netConnection.pipe(sshStream).pipe(netConnection);
+    }
+  );
   return ssh;
 }
 
@@ -59,17 +44,23 @@ function createServer(config) {
     let port = netConnection.address().port;
     let tunnelConfig = config.tunnels.find(tc => tc.srcPort === port);
 
-    ssh = bindssh(tunnelConfig, netConnection);
-    ssh.on('error', server.emit.bind(server, 'error'));
+    if (tunnelConfig) {
+      ssh = makeTunnel(tunnelConfig, netConnection);
 
-    netConnection.on('sshStream', function(sshStream) {
-      sshStream.on('error', function() {
-        server.close();
+      netConnection.on('sshStream', function(sshStream) {
+        sshStream.on('error', function() {
+          server.close();
+        });
       });
-    });
 
-    connections.push(ssh, netConnection);
-    ssh.connect(config.ssh);
+      netConnection.on('close', function() {
+        connections.splice(connections.indexOf(this), 1);
+      });
+
+      connections.push(netConnection);
+    } else {
+      netConnection.end();
+    }
   });
 
   server.on('close', function() {
@@ -82,11 +73,30 @@ function createServer(config) {
 }
 
 server = createServer(config);
-server.listen(9090, function(error) {
-  if(error) {
-    console.error(error);
-    process.exit(1);
-  }
+
+ssh.on('ready', function() {
+  console.log('SSH connection established');
+
+  ssh.on('error', server.emit.bind(server, 'error'));
+
+  server.listen(9090, function(error) {
+    console.log('Local proxy server listening');
+    if(error) {
+      console.error(error);
+      process.exit(1);
+    }
+  });
+
+  setTimeout(() => {
+    console.log('Tunneling now possible');
+    config.tunnels.push({
+      name: 'rethinkdb',
+        srcHost: '127.0.0.1',
+      srcPort: 9090,
+      dstHost: '127.0.0.1',
+      dstPort: 9090
+    });
+  }, 5000)
 });
 
 server.on('error', err => {
@@ -120,3 +130,5 @@ process.on('uncaughtException', function(e) {
   console.log(e.stack);
   process.exit(99);
 });
+
+ssh.connect(config.ssh);
