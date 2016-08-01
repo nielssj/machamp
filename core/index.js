@@ -64,41 +64,45 @@ class MachampCore {
     });
   }
 
-  connect(callback) {
-    this.ssh.on('error', callback);
-    this.ssh.on('ready', () => {
-      this.ssh.removeListener('error', callback);
-      callback();
-    });
+  connect() {
+    return new Promise((resolve, reject) => {
+      this.ssh.on('error', reject);
+      this.ssh.on('ready', () => {
+        this.ssh.removeListener('error', reject);
+        resolve();
+      });
 
-    this.ssh.connect(this.config.ssh);
+      this.ssh.connect(this.config.ssh);
+    })
   }
 
-  disconnect(callback) {
-    let tunnelsExited = 0;
-    this.exiting = true;
-    this.tunnels.forEach(tunnel => {
-      tunnel.server.close();
-      tunnel.server.on('close', (err) => {
-        tunnel.server.closed = true;
-        if (err) {
-          tunnel.server.closeError = err;
-        }
-
-        tunnelsExited++;
-
-        if (tunnelsExited == this.tunnels.length) {
-          const errors = this.tunnels
-            .filter(t => t.closeError)
-            .map(t => t.closeError);
-          if (errors.length > 0) {
-            callback(errors);
-          } else {
-            callback()
+  disconnect() {
+    return new Promise((resolve, reject) => {
+      let tunnelsExited = 0;
+      this.exiting = true;
+      this.tunnels.forEach(tunnel => {
+        tunnel.server.close();
+        tunnel.server.on('close', (err) => {
+          tunnel.server.closed = true;
+          if (err) {
+            tunnel.server.closeError = err;
           }
-        }
+
+          tunnelsExited++;
+
+          if (tunnelsExited == this.tunnels.length) {
+            const errors = this.tunnels
+              .filter(t => t.closeError)
+              .map(t => t.closeError);
+            if (errors.length > 0) {
+              reject(errors);
+            } else {
+              resolve()
+            }
+          }
+        })
       })
-    })
+    });
   }
 
   isDisconnecting() {
