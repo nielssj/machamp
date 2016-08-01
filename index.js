@@ -9,7 +9,11 @@ config = {
     port: 22,
     username: 'root',
     agent: '/run/user/1000/keyring/ssh'
-  },
+  }
+};
+
+state = {
+  exiting: false,
   tunnels: []
 };
 
@@ -29,39 +33,31 @@ function makeTunnel(tunnelConfig, netConnection) {
       netConnection.pipe(sshStream).pipe(netConnection);
     }
   );
-  return ssh;
 }
 
-function createServer(config) {
-  var server,
-    ssh,
-    connections = [];
+function createServer(tunnelConfig) {
+  var server, connections = [];
 
   server = net.createServer(function(netConnection) {
     netConnection.on('error', server.emit.bind(server, 'error'));
     server.emit('netConnection', netConnection, server);
 
-    let port = netConnection.address().port;
-    let tunnelConfig = config.tunnels.find(tc => tc.srcPort === port);
+    makeTunnel(tunnelConfig, netConnection);
 
-    if (tunnelConfig) {
-      ssh = makeTunnel(tunnelConfig, netConnection);
-
-      netConnection.on('sshStream', function(sshStream) {
-        sshStream.on('error', function() {
-          server.close();
-        });
+    netConnection.on('sshStream', function(sshStream) {
+      sshStream.on('error', function() {
+        server.close();
       });
+    });
 
-      netConnection.on('close', function() {
-        connections.splice(connections.indexOf(this), 1);
-      });
+    netConnection.on('close', function() {
+      connections.splice(connections.indexOf(this), 1);
+    });
 
-      connections.push(netConnection);
-    } else {
-      netConnection.end();
-    }
+    connections.push(netConnection);
   });
+
+  server.on('error', ssh.emit.bind(ssh, 'error'));
 
   server.on('close', function() {
     connections.forEach(function(connection) {
@@ -72,26 +68,33 @@ function createServer(config) {
   return server;
 }
 
-server = createServer(config);
+function startTunneling(tunnelConfig) {
+  if (state.exiting) {
+    return;
+  }
 
-ssh.on('ready', function() {
-  console.log('SSH connection established');
+  let server = createServer(tunnelConfig);
 
-  ssh.on('error', server.emit.bind(server, 'error'));
+  tunnelConfig.server = server;
+  state.tunnels.push(tunnelConfig);
 
-  server.listen(9090, function(error) {
+  server.listen(tunnelConfig.srcPort, function(error) {
     console.log('Local proxy server listening');
     if(error) {
       console.error(error);
       process.exit(1);
     }
   });
+}
+
+ssh.on('ready', function() {
+  console.log('SSH connection established');
 
   setTimeout(() => {
     console.log('Tunneling now possible');
-    config.tunnels.push({
+    startTunneling({
       name: 'rethinkdb',
-        srcHost: '127.0.0.1',
+      srcHost: '127.0.0.1',
       srcPort: 9090,
       dstHost: '127.0.0.1',
       dstPort: 9090
@@ -99,26 +102,41 @@ ssh.on('ready', function() {
   }, 5000)
 });
 
-server.on('error', err => {
+ssh.on('error', err => {
   console.log(err);
 });
 
-let exiting = false;
 process.on('SIGINT', function () {
   console.log('\nexisting...');
-  if (!exiting) {
-    exiting = true;
-    server.close();
-    server.on('close', (err) => {
-      if (err) {
-        console.log('exited with error');
-        console.log(e.stack);
-        process.exit(1);
-      } else {
-        console.log('exited gracefully');
-        process.exit(0);
-      }
+  if (!state.exiting) {
+    let tunnelsExited = 0;
+    state.exiting = true;
+    state.tunnels.forEach(tunnel => {
+      tunnel.server.close();
+      tunnel.server.on('close', (err) => {
+        tunnel.server.closed = true;
+        if (err) {
+          tunnel.server.closeError = err;
+        }
+
+        tunnelsExited++;
+
+        if (tunnelsExited == state.tunnels.length) {
+          const errors = state.tunnels
+            .filter(t => t.closeError)
+            .map(t => t.closeError);
+          if (errors.length > 0) {
+            console.log('exited with error');
+            errors.forEach(err => console.log(err.stack));
+            process.exit(1);
+          } else {
+            console.log('exited gracefully');
+            process.exit(0);
+          }
+        }
+      })
     })
+
   } else {
     console.log('forcefully exited');
     process.exit(1);
