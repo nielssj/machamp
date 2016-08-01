@@ -110,39 +110,43 @@ class MachampCore {
   }
 
   startTunneling(tunnel) {
-    if (this.exiting) {
-      return;
-    }
-
-    let server = createServer.bind(this)(tunnel);
-
-    tunnel.server = server;
-    this.tunnels.push(tunnel);
-
-    server.listen(tunnel.srcPort, function(error) {
-      console.log(`Started tunneling ${tunnel.srcHost}:${tunnel.srcPort} -> ${tunnel.dstHost}:${tunnel.dstPort}`);
-      if(error) {
-        console.error(error);
-        process.exit(1);
+    return new Promise((resolve, reject) => {
+      if (this.exiting) {
+        return reject(new Error("Disconnecting, no more tunnels can be started"));
       }
+
+      let server = createServer.bind(this)(tunnel);
+
+      tunnel.server = server;
+      this.tunnels.push(tunnel);
+
+      server.listen(tunnel.srcPort, function(error) {
+        console.log(`Started tunneling ${tunnel.srcHost}:${tunnel.srcPort} -> ${tunnel.dstHost}:${tunnel.dstPort}`);
+        if(error) {
+          return reject(error);
+        }
+        resolve(error);
+      });
     });
   }
 
   stopTunneling(name) {
-    if (this.exiting) {
-      return;
-    }
-
-    const tunnel = this.tunnels.find(t => t.name == name);
-    tunnel.server.close();
-
-    tunnel.server.on('close', (err) => {
-      if(err) {
-        console.log('tunnel exited with error');
-        console.log(err.stack);
+    return new Promise((resolve, reject) => {
+      if (this.exiting) {
+        return reject(new Error("Disconnecting, tunnel will be stopped as part of disconnect procedure"));
       }
-      this.tunnels.slice(this.tunnels.indexOf(tunnel), 1);
-      console.log(`Stopped tunneling ${tunnel.srcHost}:${tunnel.srcPort} -> ${tunnel.dstHost}:${tunnel.dstPort}`);
+
+      const tunnel = this.tunnels.find(t => t.name == name);
+      tunnel.server.close();
+
+      tunnel.server.on('close', (err) => {
+        if(err) {
+          return reject(err);
+        }
+        this.tunnels.slice(this.tunnels.indexOf(tunnel), 1);
+        console.log(`Stopped tunneling ${tunnel.srcHost}:${tunnel.srcPort} -> ${tunnel.dstHost}:${tunnel.dstPort}`);
+        resolve();
+      });
     });
   }
 }

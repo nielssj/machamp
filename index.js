@@ -17,18 +17,20 @@ core.connect()
 
     setTimeout(() => {
       core.startTunneling({
-        name: 'rethinkdb',
-        srcHost: '127.0.0.1',
-        srcPort: 9090,
-        dstHost: '127.0.0.1',
-        dstPort: 9090
-      });
-      console.log('Tunneling now possible');
+          name: 'test',
+          srcHost: '127.0.0.1',
+          srcPort: 9090,
+          dstHost: '127.0.0.1',
+          dstPort: 9090
+        })
+        .then(() => console.log('Tunneling now possible'))
+        .catch(err => console.log('Failed to start tunnel: \n' + err.stack));
     }, 500);
 
     setTimeout(() => {
-      core.stopTunneling('rethinkdb');
-      console.log('Tunneling no longer possible');
+      core.stopTunneling('test')
+        .then(() => console.log('Tunneling no longer possible'))
+        .catch(err => console.log('Failed to stop tunnel: \n' + err.stack));
     }, 5000);
   })
   .catch(err => {
