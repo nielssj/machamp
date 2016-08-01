@@ -28,7 +28,7 @@ function makeTunnel(tunnelConfig, netConnection) {
         return;
       }
 
-      console.log('Tunnel created');
+      console.log('Connection tunneled'); // TODO: Remove this or reduce to DEBUG level
       netConnection.emit('sshStream', sshStream);
       netConnection.pipe(sshStream).pipe(netConnection);
     }
@@ -68,18 +68,18 @@ function createServer(tunnelConfig) {
   return server;
 }
 
-function startTunneling(tunnelConfig) {
+function startTunneling(tunnel) {
   if (state.exiting) {
     return;
   }
 
-  let server = createServer(tunnelConfig);
+  let server = createServer(tunnel);
 
-  tunnelConfig.server = server;
-  state.tunnels.push(tunnelConfig);
+  tunnel.server = server;
+  state.tunnels.push(tunnel);
 
-  server.listen(tunnelConfig.srcPort, function(error) {
-    console.log(`Started tunneling ${tunnelConfig.srcHost}:${tunnelConfig.srcPort} -> ${tunnelConfig.dstHost}:${tunnelConfig.dstPort}`);
+  server.listen(tunnel.srcPort, function(error) {
+    console.log(`Started tunneling ${tunnel.srcHost}:${tunnel.srcPort} -> ${tunnel.dstHost}:${tunnel.dstPort}`);
     if(error) {
       console.error(error);
       process.exit(1);
@@ -87,11 +87,28 @@ function startTunneling(tunnelConfig) {
   });
 }
 
+function stopTunneling(name) {
+  if (state.exiting) {
+    return;
+  }
+
+  const tunnel = state.tunnels.find(t => t.name == name);
+  tunnel.server.close();
+
+  tunnel.server.on('close', (err) => {
+    if(err) {
+      console.log('tunnel exited with error');
+      console.log(err.stack);
+    }
+    state.tunnels.slice(state.tunnels.indexOf(tunnel), 1);
+    console.log(`Stopped tunneling ${tunnel.srcHost}:${tunnel.srcPort} -> ${tunnel.dstHost}:${tunnel.dstPort}`);
+  });
+}
+
 ssh.on('ready', function() {
   console.log('SSH connection established');
 
   setTimeout(() => {
-    console.log('Tunneling now possible');
     startTunneling({
       name: 'rethinkdb',
       srcHost: '127.0.0.1',
@@ -99,7 +116,13 @@ ssh.on('ready', function() {
       dstHost: '127.0.0.1',
       dstPort: 9090
     });
-  }, 5000)
+    console.log('Tunneling now possible');
+  }, 500);
+
+  setTimeout(() => {
+    stopTunneling('rethinkdb');
+    console.log('Tunneling no longer possible');
+  }, 5000);
 });
 
 ssh.on('error', err => {
