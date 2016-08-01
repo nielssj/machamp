@@ -79,7 +79,7 @@ function startTunneling(tunnelConfig) {
   state.tunnels.push(tunnelConfig);
 
   server.listen(tunnelConfig.srcPort, function(error) {
-    console.log('Local proxy server listening');
+    console.log(`Started tunneling ${tunnelConfig.srcHost}:${tunnelConfig.srcPort} -> ${tunnelConfig.dstHost}:${tunnelConfig.dstPort}`);
     if(error) {
       console.error(error);
       process.exit(1);
