@@ -1,2 +1,4 @@
 # WebStorm preferences
 .idea/
+# Third-party node modules
+/node_modules/

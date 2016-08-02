@@ -2,7 +2,7 @@
   "name": "machamp",
   "version": "0.0.1",
   "description": "Efficient and user-friendly SSH forwarding GUI",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,5 +27,8 @@
   "homepage": "https://github.com/nielssj/machamp#readme",
   "dependencies": {
     "ssh2": "^0.5.0"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^1.3.1"
   }
 }
