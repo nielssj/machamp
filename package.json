@@ -2,7 +2,7 @@
   "name": "machamp",
   "version": "0.0.1",
   "description": "Efficient and user-friendly SSH forwarding GUI",
-  "main": "main.js",
+  "main": "bootstrapper.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,7 +26,12 @@
   },
   "homepage": "https://github.com/nielssj/machamp#readme",
   "dependencies": {
-    "ssh2": "^0.5.0"
+    "ssh2": "^0.5.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-register": "^6.11.6",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0"
   },
   "devDependencies": {
     "electron-prebuilt": "^1.3.1"
