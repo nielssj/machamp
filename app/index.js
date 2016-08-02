@@ -1,4 +1,4 @@
 
-function onHelloClick(event) {
+function onHelloClick() {
   console.log("Hello!")
 }
