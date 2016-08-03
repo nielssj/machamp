@@ -9,6 +9,11 @@
 We are using node <script>document.write(process.versions.node)</script>,
 Chrome <script>document.write(process.versions.chrome)</script>,
 and Electron <script>document.write(process.versions.electron)</script>.
-<script type="text/javascript" src="app/index.js" charset="utf-8"></script>
+
+<div class="app-root" id="root">
+<script>
+    require('babel-register');
+    require('./app/index');
+</script>
 </body>
 </html>
