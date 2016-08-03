@@ -1,4 +1,5 @@
 import {app, BrowserWindow, ipcMain} from 'electron';
+import MachampCore from './core'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -48,8 +49,18 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
+let core;
+
 ipcMain.on('connect-ssh-message', (event, arg) => {
-  setTimeout(() => {
-    event.sender.send('connect-ssh-reply', 'hello ' + arg)
-  }, 2000)
+  if (core === null) {
+    core = new MachampCore(arg);
+    core.connect()
+      .then(() => event.sender.send('connect-ssh-reply'))
+      .catch(err => {
+        event.sender.send('connect-ssh-reply', 'CONNECTION_FAILED')
+        console.log('Failed to connect SSH: ' + err);
+      })
+  } else {
+    event.sender.send('connect-ssh-reply', 'ALREADY_CONNECTED')
+  }
 })
