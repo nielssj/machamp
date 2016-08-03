@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
 import tunnels from './tunnels'
+import connection from "./connection";
 
 const combinedReducer = combineReducers({
-  tunnels
+  tunnels,
+  connection
 })
 
 export default combinedReducer
