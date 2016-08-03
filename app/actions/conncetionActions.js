@@ -1,3 +1,4 @@
+import { ipcRenderer} from 'electron'
 
 function requestConnectSSH() {
   return {
@@ -14,8 +15,10 @@ function confirmConnectSSH() {
 export function connectSSH() {
   return dispatch => {
     dispatch(requestConnectSSH())
-    return setTimeout(() => {
+    ipcRenderer.once('connect-ssh-reply', (event, arg) => {
+      console.log(arg)
       dispatch(confirmConnectSSH())
-    }, 2000)
+    })
+    ipcRenderer.send('connect-ssh-message', 'john')
   }
 }
