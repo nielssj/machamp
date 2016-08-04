@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 import {connectSSH} from "../actions/conncetionActions";
 import {startTunnel, stopTunnel} from "../actions/tunnelsActions";
 import TunnelList from '../components/TunnelList/TunnelList';
+import ConnectionHeader from '../components/ConnectionHeader/ConnectionHeader';
 
 class App extends Component {
-  onHelloClick() {
+  onHeaderConnectClick() {
     const connection = this.props.connection.toJS()
     this.props.dispatch(connectSSH(connection.config))
   }
@@ -18,34 +19,13 @@ class App extends Component {
     this.props.dispatch(stopTunnel(tunnel.toJS()))
   }
 
-  renderConnectionHeader() {
-    let connection = this.props.connection.toJS();
-    return (
-      <div>
-        <p>
-          <strong><a onClick={this.onHelloClick.bind(this)}>Connect</a></strong>
-          <span> {connection.config.username}@{connection.config.host} </span>
-        </p>
-      </div>
-    )
-  }
-
-  renderConnectionIndicator() {
-    let status = this.props.connection.get('status').toJS();
-    if (status.isConnecting) {
-      return <p>Connecting...</p>
-    }
-    if (status.isConnected) {
-      return <p>Connected</p>
-    }
-    return <p>Not connected</p>
-  }
-
   render() {
     return (
       <div>
-        {this.renderConnectionHeader()}
-        {this.renderConnectionIndicator()}
+        <ConnectionHeader
+          connection={this.props.connection}
+          onConnectClick={this.onHeaderConnectClick.bind(this)}
+        />
         <hr />
         <TunnelList
           tunnels={this.props.tunnels}
