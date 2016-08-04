@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {connectSSH} from "../actions/conncetionActions";
 import {startTunnel, stopTunnel} from "../actions/tunnelsActions";
-import TunnelRow from '../components/TunnelRow';
+import TunnelRow from '../components/TunnelRow/TunnelRow';
 
 class App extends Component {
   onHelloClick() {

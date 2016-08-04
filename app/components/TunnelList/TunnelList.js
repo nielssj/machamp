@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import TunnelRow from '../TunnelRow';
+import TunnelRow from '../TunnelRow/TunnelRow';
 
 class TunnelList extends Component {
   render() {
