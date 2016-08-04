@@ -143,7 +143,7 @@ class MachampCore {
         if(err) {
           return reject(err);
         }
-        this.tunnels.slice(this.tunnels.indexOf(tunnel), 1);
+        this.tunnels.splice(this.tunnels.indexOf(tunnel), 1);
         console.log(`Stopped tunneling ${tunnel.srcHost}:${tunnel.srcPort} -> ${tunnel.dstHost}:${tunnel.dstPort}`);
         resolve();
       });
