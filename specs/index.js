@@ -2,6 +2,8 @@ import React from "react"
 import Immutable from "immutable"
 import TunnelRow from "../app/components/TunnelRow"
 
+import TunnelListSpec from "../app/components/TunnelList/TunnelList.spec"
+
 const TUNNEL = Immutable.fromJS({
   name: 'test',
   srcHost: '127.0.0.1',
@@ -10,7 +12,7 @@ const TUNNEL = Immutable.fromJS({
   dstPort: 9090
 })
 
-describe("MyComponent", function() {
+describe("TunnelRow", function() {
 
   before(() => {
     this.load( <TunnelRow tunnel={TUNNEL} /> );
