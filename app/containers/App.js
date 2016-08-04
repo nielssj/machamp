@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {connectSSH} from "../actions/conncetionActions";
 import {startTunnel, stopTunnel} from "../actions/tunnelsActions";
+import TunnelRow from '../components/TunnelRow';
 
 class App extends Component {
   onHelloClick() {
@@ -10,11 +11,11 @@ class App extends Component {
   }
 
   onEnableTunnelClick(tunnel) {
-    this.props.dispatch(startTunnel(tunnel))
+    this.props.dispatch(startTunnel(tunnel.toJS()))
   }
 
   onDisableTunnelClick(tunnel) {
-    this.props.dispatch(stopTunnel(tunnel))
+    this.props.dispatch(stopTunnel(tunnel.toJS()))
   }
 
   renderConnectionHeader() {
@@ -41,24 +42,18 @@ class App extends Component {
   }
 
   renderTunnelList() {
-    let entries = this.props.tunnels.get('entries').toJS();
+    let entries = this.props.tunnels.get('entries');
     return (
       <ul>
         {
-          entries.map(tunnel => {
-            return (
-              <li key={tunnel.name}>
-                {
-                  tunnel.isConnected ?
-                    <strong onClick={this.onDisableTunnelClick.bind(this, tunnel)} >disable</strong> :
-                    <strong onClick={this.onEnableTunnelClick.bind(this, tunnel)} >enable</strong>
-                }
-                <span> {tunnel.name}</span>
-                { tunnel.isConnecting ? <span> - Connecting..</span> : '' }
-                { tunnel.isConnected ? <span> - Connected</span> : '' }
-              </li>
-            )
-          })
+          entries.map(tunnel =>
+            <TunnelRow
+              key={tunnel.get('name')}
+              tunnel={tunnel}
+              onEnableClick={this.onEnableTunnelClick.bind(this, tunnel)}
+              onDisableClick={this.onDisableTunnelClick.bind(this, tunnel)}
+            />
+          )
         }
       </ul>
     )
