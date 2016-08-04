@@ -11,8 +11,8 @@ class TunnelList extends Component {
             <TunnelRow
               key={tunnel.get('name')}
               tunnel={tunnel}
-              onEnableClick={this.props.onEnableTunnelClick.bind(this, tunnel)}
-              onDisableClick={this.props.onDisableTunnelClick.bind(this, tunnel)}
+              onEnableClick={this.props.onEnableTunnelClick.bind(null, tunnel)}
+              onDisableClick={this.props.onDisableTunnelClick.bind(null, tunnel)}
             />
           )
         }
