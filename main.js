@@ -60,6 +60,14 @@ function initHandlers(core) {
           console.log('Failed to start tunnel: ' + err);
         })
   })
+  ipcMain.on('stop-tunnel-message', (event, arg) => {
+    core.stopTunneling(arg.name)
+      .then(() => event.sender.send('stop-tunnel-reply'))
+      .catch(err => {
+        event.sender.send('stop-tunnel-reply', 'TUNNEL_STOP_FAILED')
+        console.log('Failed to stop tunnel: ' + err);
+      })
+  })
 }
 
 ipcMain.on('connect-ssh-message', (event, arg) => {

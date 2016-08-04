@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {connectSSH} from "../actions/conncetionActions";
-import {startTunnel} from "../actions/tunnelsActions";
+import {startTunnel, stopTunnel} from "../actions/tunnelsActions";
 
 class App extends Component {
   onHelloClick() {
@@ -11,6 +11,10 @@ class App extends Component {
 
   onEnableTunnelClick(tunnel) {
     this.props.dispatch(startTunnel(tunnel))
+  }
+
+  onDisableTunnelClick(tunnel) {
+    this.props.dispatch(stopTunnel(tunnel))
   }
 
   renderConnectionHeader() {
@@ -44,7 +48,11 @@ class App extends Component {
           entries.map(tunnel => {
             return (
               <li key={tunnel.name}>
-                <strong onClick={this.onEnableTunnelClick.bind(this, tunnel)} >enable</strong>
+                {
+                  tunnel.isConnected ?
+                    <strong onClick={this.onDisableTunnelClick.bind(this, tunnel)} >disable</strong> :
+                    <strong onClick={this.onEnableTunnelClick.bind(this, tunnel)} >enable</strong>
+                }
                 <span> {tunnel.name}</span>
                 { tunnel.isConnecting ? <span> - Connecting..</span> : '' }
                 { tunnel.isConnected ? <span> - Connected</span> : '' }

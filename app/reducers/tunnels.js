@@ -28,6 +28,10 @@ const tunnels = (state = INITIAL_STATE, action) => {
         }
       )
       break
+    case 'CONFIRM_STOP_TUNNEL':
+      id = state.get('entries').findIndex(e => e.get('name') == action.tunnel.name)
+      return state.updateIn(['entries', id], e => e.set('isConnected', false))
+      break
     default:
       return state;
   }

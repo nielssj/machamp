@@ -14,6 +14,20 @@ function confirmStartTunnel(tunnel) {
   }
 }
 
+function requestStopTunnel(tunnel) {
+  return {
+    type: 'REQUEST_STOP_TUNNEL',
+    tunnel
+  }
+}
+
+function confirmStopTunnel(tunnel) {
+  return {
+    type: 'CONFIRM_STOP_TUNNEL',
+    tunnel
+  }
+}
+
 export function startTunnel(tunnel) {
   return dispatch => {
     dispatch(requestStartTunnel(tunnel))
@@ -21,5 +35,15 @@ export function startTunnel(tunnel) {
       dispatch(confirmStartTunnel(tunnel))
     })
     ipcRenderer.send('start-tunnel-message', tunnel)
+  }
+}
+
+export function stopTunnel(tunnel) {
+  return dispatch => {
+    dispatch(requestStopTunnel(tunnel))
+    ipcRenderer.once('stop-tunnel-reply', (event, arg) => {
+      dispatch(confirmStopTunnel(tunnel))
+    })
+    ipcRenderer.send('stop-tunnel-message', tunnel)
   }
 }
