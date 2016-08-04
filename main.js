@@ -51,11 +51,25 @@ app.on('activate', () => {
 
 let core;
 
+function initHandlers(core) {
+  ipcMain.on('start-tunnel-message', (event, arg) => {
+      core.startTunneling(arg)
+        .then(() => event.sender.send('start-tunnel-reply'))
+        .catch(err => {
+          event.sender.send('start-tunnel-reply', 'TUNNEL_START_FAILED')
+          console.log('Failed to start tunnel: ' + err);
+        })
+  })
+}
+
 ipcMain.on('connect-ssh-message', (event, arg) => {
-  if (core === null) {
-    core = new MachampCore(arg);
+  if (!core) {
+    core = new MachampCore({ ssh:arg });
     core.connect()
-      .then(() => event.sender.send('connect-ssh-reply'))
+      .then(() => {
+        initHandlers(core)
+        event.sender.send('connect-ssh-reply')
+      })
       .catch(err => {
         event.sender.send('connect-ssh-reply', 'CONNECTION_FAILED')
         console.log('Failed to connect SSH: ' + err);

@@ -12,13 +12,12 @@ function confirmConnectSSH() {
   }
 }
 
-export function connectSSH() {
+export function connectSSH(config) {
   return dispatch => {
     dispatch(requestConnectSSH())
     ipcRenderer.once('connect-ssh-reply', (event, arg) => {
-      console.log(arg)
       dispatch(confirmConnectSSH())
     })
-    ipcRenderer.send('connect-ssh-message', 'john')
+    ipcRenderer.send('connect-ssh-message', config)
   }
 }
