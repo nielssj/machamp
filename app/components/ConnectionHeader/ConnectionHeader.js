@@ -57,6 +57,7 @@ class ConnectionHeader extends Component {
 
   render() {
     let connection = this.props.connection.toJS();
+    style.headerRoot.width = this.props.width || '100%'
     return (
       <div style={style.headerRoot}>
         <div style={style.headerConnectionField}>
