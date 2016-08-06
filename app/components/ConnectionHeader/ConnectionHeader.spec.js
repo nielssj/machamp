@@ -32,11 +32,13 @@ describe("ConnectionHeader", function() {
         })
       }, 1000)
     }
-    this.load(
-      <ConnectionHeader
-        connection={INITIAL_STATE}
-        onConnectClick={connect}
-      />
+    this.component(
+      <div style={{width: 550}}>
+        <ConnectionHeader
+          connection={INITIAL_STATE}
+          onConnectClick={connect}
+        />
+      </div>
     );
   });
 });
