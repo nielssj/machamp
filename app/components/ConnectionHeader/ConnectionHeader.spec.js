@@ -17,10 +17,19 @@ const INITIAL_STATE = Immutable.fromJS({
 
 describe("ConnectionHeader", function() {
   before(() => {
+    let disconnect = () => {
+      this.props({
+        connection: INITIAL_STATE.setIn(['status', 'isConnected'], false),
+        onConnectClick: connect
+      })
+    }
     let connect = () => {
       this.props({ connection: INITIAL_STATE.setIn(['status', 'isConnecting'], true) })
       setTimeout(() => {
-        this.props({ connection: INITIAL_STATE.setIn(['status', 'isConnected'], true) })
+        this.props({
+          connection: INITIAL_STATE.setIn(['status', 'isConnected'], true),
+          onConnectClick: disconnect
+        })
       }, 1000)
     }
     this.load(
