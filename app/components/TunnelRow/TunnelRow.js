@@ -1,36 +1,15 @@
 import React, { Component } from 'react'
 import styles from './TunnelRow.css'
+import StatusCheckButton from '../StatusCheckButton/StatusCheckButton'
 
 class TunnelRow extends Component {
   renderEnableButton(tunnel) {
-    let circleStyle = styles.iconCircle
-    let onClick = this.props.onEnableClick;
-    let icon = null;
-    let hideIcon = styles.hidden;
-
     if (tunnel.isConnected) {
-      circleStyle = styles.iconCircleOK;
-      onClick = this.props.onDisableClick;
-      hideIcon = ''
-      icon = 'fa-check'
+      return <StatusCheckButton state='checked' onClick={this.props.onDisableClick} />
     } else if (tunnel.isConnecting) {
-      circleStyle = styles.iconCircle;
-      onClick = null;
-      icon = 'fa-hourglass-start' // TODO: Do animation instead
-      hideIcon = ''
+      return <StatusCheckButton state='loading' />
     }
-
-    return (
-      <div className={styles.iconContainer}>
-        <svg viewBox="0 0 120 120">
-          <circle onClick={onClick} className={circleStyle} cx="60" cy="60" r="50"/>
-        </svg>
-        <i
-          className={`${styles.iconCheckMark} ${icon} ${hideIcon} fa fa-lg`}
-          onClick = {onClick}
-        />
-      </div>
-    )
+    return <StatusCheckButton onClick={this.props.onEnableClick} />
   }
 
   render() {

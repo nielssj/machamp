@@ -1,0 +1,28 @@
+.container {
+    width: 40px;
+    height: 40px;
+    position: relative;
+}
+.circle {
+    fill: #b8bfd2;
+    cursor:pointer;
+}
+.circleOk {
+    composes:circle;
+    fill: #88d1d1
+}
+.circleError {
+    composes:circle;
+    fill: #DE867D
+}
+.icon {
+    font-size: 20px;
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    color: #ffffff;
+    cursor: pointer;
+}
+.hidden {
+    display:none;
+}
