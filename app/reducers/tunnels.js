@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 const INITIAL_STATE = Immutable.fromJS({
   entries: [
     {
-      name: 'test',
+      name: 'RethinkDB',
       srcHost: '127.0.0.1',
       srcPort: 9090,
       dstHost: '127.0.0.1',

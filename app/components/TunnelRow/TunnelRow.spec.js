@@ -3,7 +3,7 @@ import Immutable from "immutable"
 import TunnelRow from "./TunnelRow"
 
 const TUNNEL = Immutable.fromJS({
-  name: 'test',
+  name: 'RethinkDB',
   srcHost: '127.0.0.1',
   srcPort: 9090,
   dstHost: '127.0.0.1',

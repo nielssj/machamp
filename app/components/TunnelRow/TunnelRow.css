@@ -1,0 +1,44 @@
+.root {
+    background-color: #ffffff;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-shadow: 5px 5px 30px #585858
+}
+.leftColumn {
+    padding: 10px;
+    border-right: 2px solid #c1c4d2;
+    display: flex
+}
+.rightColumn {
+    padding: 10px
+} 
+.title {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    padding-bottom: 3px
+}
+.description {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+    color: #c1c4d2
+}
+.iconContainer {
+    width: 40px;
+    height: 40px
+}
+.iconCircle {
+    fill: #b8bfd2;
+    cursor:pointer;
+}
+.iconCircleOK {
+    composes:iconCircle;
+    fill: #88d1d1
+}
+.iconCircleError {
+    composes:iconCircle;
+    fill: #DE867D
+}
