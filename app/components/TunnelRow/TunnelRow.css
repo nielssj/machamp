@@ -28,7 +28,8 @@
 }
 .iconContainer {
     width: 40px;
-    height: 40px
+    height: 40px;
+    position: relative;
 }
 .iconCircle {
     fill: #b8bfd2;
@@ -41,4 +42,12 @@
 .iconCircleError {
     composes:iconCircle;
     fill: #DE867D
+}
+.iconCheckMark {
+    font-size: 20px;
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    color: #ffffff;
+    cursor: pointer;
 }

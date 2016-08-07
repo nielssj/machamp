@@ -12,10 +12,17 @@ class TunnelRow extends Component {
       circleStyle = styles.iconCircle;
       onClick = null;
     }
+    let checkMark = <i
+      className={styles.iconCheckMark + " fa fa-check fa-lg"}
+      onClick = {this.props.onDisableClick}
+    />
     return (
-      <svg className={styles.iconContainer} viewBox="0 0 120 120">
-        <circle onClick={onClick} className={circleStyle} cx="60" cy="60" r="50"/>
-      </svg>
+      <div className={styles.iconContainer}>
+        <svg viewBox="0 0 120 120">
+          <circle onClick={onClick} className={circleStyle} cx="60" cy="60" r="50"/>
+        </svg>
+        {tunnel.isConnected ? checkMark : ''}
+      </div>
     )
   }
 
@@ -29,7 +36,6 @@ class TunnelRow extends Component {
         <div className={styles.rightColumn}>
           <div className={styles.title}>
             <span>{tunnel.name}</span>
-            <i className="fa fa-check"/>
           </div>
           <div className={styles.description} >8080 -> 27.382.92.289:8080</div>
         </div>
