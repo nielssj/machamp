@@ -51,3 +51,6 @@
     color: #ffffff;
     cursor: pointer;
 }
+.hidden {
+    display:none;
+}
