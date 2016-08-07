@@ -1,0 +1,27 @@
+.root {
+    background-color: #3c5c5c;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px
+}
+.connectionField {
+    font-family: sans-serif;
+    background-color: #293f3f;
+    color: #85cccc;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-right: 12px
+}
+.connectButton {
+    font-family: sans-serif;
+    color: white;
+    font-weight: bold;
+    border-Radius: 4px;
+    border: 2px solid white;
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer
+}

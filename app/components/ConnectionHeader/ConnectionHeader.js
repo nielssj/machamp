@@ -1,42 +1,5 @@
 import React, { Component } from 'react'
-
-const style = {
-  headerRoot: {
-    backgroundColor: '#3c5c5c',
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    boxSizing: 'border-box',
-    padding: 12
-  },
-  headerConnectionField: {
-    fontFamily: 'sans-serif',
-    backgroundColor: '#293f3f',
-    color: '#85cccc',
-    fontWeight: 'bold',
-    borderRadius: 4,
-    paddingTop: 8,
-    paddingRight: 10,
-    paddingBottom: 8,
-    paddingLeft: 10,
-    marginRight: 12
-  },
-  connectButton: {
-    fontFamily: 'sans-serif',
-    color: 'white',
-    fontWeight: 'bold',
-    borderRadius: 4,
-    borderStyle: 'solid',
-    borderWidth: 2,
-    borderColor: 'white',
-    paddingTop: 5,
-    paddingRight: 10,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    marginRight: 10,
-    cursor: 'pointer'
-  }
-}
+import styles from './ConnectionHeader.css'
 
 class ConnectionHeader extends Component {
 
@@ -49,7 +12,7 @@ class ConnectionHeader extends Component {
       buttonText = 'Disconnect'
     }
     return (
-      <div style={style.connectButton}>
+      <div className={styles.connectButton}>
         <a onClick={this.props.onConnectClick}>{buttonText}</a>
       </div>
     )
@@ -57,10 +20,10 @@ class ConnectionHeader extends Component {
 
   render() {
     let connection = this.props.connection.toJS();
-    style.headerRoot.width = this.props.width || '100%'
+    let width = this.props.width || '100%'
     return (
-      <div style={style.headerRoot}>
-        <div style={style.headerConnectionField}>
+      <div style={{ width: width }} className={styles.root}>
+        <div className={styles.connectionField}>
           <span> {connection.config.username}@{connection.config.host} </span>
         </div>
         {this.renderConnectButton(connection.status)}
