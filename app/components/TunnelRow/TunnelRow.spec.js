@@ -10,6 +10,7 @@ const TUNNEL = Immutable.fromJS({
   dstPort: 9090
 })
 
+
 describe("TunnelRow", function() {
 
   before(() => {
@@ -25,6 +26,7 @@ describe("TunnelRow", function() {
   });
 
   it("connect function", () => {
+    document.getElementsByClassName('uih-Component')[0].style.width = 500
     let connect = () => {
       this.props({ tunnel: TUNNEL.set('isConnecting', true) })
       setTimeout(() => {
