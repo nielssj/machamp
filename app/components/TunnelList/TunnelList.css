@@ -2,3 +2,7 @@
     padding: 0px;
     margin: 12px;
 }
+
+.root > li {
+    margin-bottom: 12px;
+}
