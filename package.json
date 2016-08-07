@@ -2,11 +2,13 @@
   "name": "machamp",
   "version": "0.0.1",
   "description": "Efficient and user-friendly SSH forwarding GUI",
-  "main": "bootstrapper.js",
+  "main": "index.js",
   "scripts": {
     "start": "node ./node_modules/.bin/electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "uih": "node ./node_modules/ui-harness/start"
+    "uih": "node ./node_modules/ui-harness/start",
+    "build": "node node_modules/webpack/bin/webpack.js",
+    "watch": "node node_modules/webpack/bin/webpack.js --watch"
   },
   "repository": {
     "type": "git",
@@ -28,9 +30,6 @@
   },
   "homepage": "https://github.com/nielssj/machamp#readme",
   "dependencies": {
-    "babel-preset-es2015": "^6.9.0",
-    "babel-preset-react": "^6.11.1",
-    "babel-register": "^6.11.6",
     "font-awesome": "^4.6.3",
     "immutable": "^3.8.1",
     "react": "^15.3.0",
@@ -41,7 +40,15 @@
     "ssh2": "^0.5.0"
   },
   "devDependencies": {
+    "babel-core": "^6.13.2",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
     "electron-prebuilt": "^1.3.1",
-    "ui-harness": "^3.17.1"
+    "json-loader": "^0.5.4",
+    "ui-harness": "^3.17.1",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1",
+    "webpack-target-electron-renderer": "^0.4.0"
   }
 }

@@ -1,4 +1,2 @@
 entry: ./specs  # Path, comma-separated paths, or array of paths.
 port: 3030
-css:
-  dir: ./css

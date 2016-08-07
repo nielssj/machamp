@@ -1,5 +1,5 @@
-import {app, BrowserWindow, ipcMain} from 'electron';
-import MachampCore from './core'
+var {app, BrowserWindow, ipcMain} = require('electron');
+var MachampCore = require('./core');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

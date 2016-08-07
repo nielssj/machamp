@@ -2,3 +2,5 @@
 .idea/
 # Third-party node modules
 /node_modules/
+# Webpack app output
+/static
