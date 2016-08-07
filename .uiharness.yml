@@ -1,3 +1,6 @@
 entry: ./specs  # Path, comma-separated paths, or array of paths.
 port: 3030
 cssModules: .css
+css:
+  baseUrl: /css
+  dir: ./node_modules/font-awesome/css
