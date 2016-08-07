@@ -36,8 +36,11 @@ describe("ConnectionHeader", function() {
       <ConnectionHeader
         connection={INITIAL_STATE}
         onConnectClick={connect}
-        width="550"
       />
     );
   });
+
+  it('wide', () => {
+    document.getElementsByClassName('uih-Component')[0].style.width = 500
+  })
 });

@@ -20,9 +20,8 @@ class ConnectionHeader extends Component {
 
   render() {
     let connection = this.props.connection.toJS();
-    let width = this.props.width || '100%'
     return (
-      <div style={{ width: width }} className={styles.root}>
+      <div className={styles.root}>
         <div className={styles.connectionField}>
           <span> {connection.config.username}@{connection.config.host} </span>
         </div>
